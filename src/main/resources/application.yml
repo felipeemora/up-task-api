@@ -1,0 +1,9 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: up-task-api
+  data:
+    mongodb:
+      uri: ${MONGO_URL}
