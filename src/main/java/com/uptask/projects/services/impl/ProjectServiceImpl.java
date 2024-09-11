@@ -53,6 +53,7 @@ public class ProjectServiceImpl implements ProjectService {
         .projectName(projectRequestDto.getProjectName())
         .clientName(projectRequestDto.getClientName())
         .description(projectRequestDto.getDescription())
+        .tasks(List.of())
         .build();
   }
 
