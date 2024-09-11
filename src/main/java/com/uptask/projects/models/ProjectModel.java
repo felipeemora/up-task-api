@@ -1,5 +1,6 @@
 package com.uptask.projects.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.uptask.task.models.TaskModel;
@@ -23,7 +24,7 @@ public class ProjectModel {
 
   private String description;
 
-  @JsonManagedReference
-  @DBRef(lazy = false)
+  @JsonBackReference
+  @DBRef
   private List<TaskModel> tasks;
 }

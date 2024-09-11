@@ -22,7 +22,6 @@ public class TaskServiceImpl implements TaskService {
     ProjectModel project = projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
     TaskModel taskCreated = taskRepository.save(toModel(requestDto, project));
     project.getTasks().add(taskCreated);
-    projectRepository.save(project);
 
     return taskCreated;
   }

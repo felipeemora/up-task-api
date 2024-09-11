@@ -26,7 +26,7 @@ public class TaskController {
   }
 
   @GetMapping("/{id}/tasks")
-  public List<TaskModel> getTasksByProjectId(@PathVariable String projectId) {
-    return taskService.getTasksByProjectId(projectId);
+  public List<TaskModel> getTasksByProjectId(@PathVariable String id) {
+    return taskService.getTasksByProjectId(id);
   }
 }
