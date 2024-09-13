@@ -5,6 +5,7 @@ import com.uptask.projects.dto.ProjectResponseDto;
 import com.uptask.projects.models.ProjectModel;
 import com.uptask.projects.repositories.ProjectRepository;
 import com.uptask.projects.services.ProjectService;
+import com.uptask.task.dto.TaskResponseDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,17 @@ public class ProjectServiceImpl implements ProjectService {
         .projectName(projectModel.getProjectName())
         .clientName(projectModel.getClientName())
         .description(projectModel.getDescription())
+        .tasks(projectModel.getTasks().stream()
+            .map(taskModel -> TaskResponseDto.builder()
+                .id(taskModel.getId())
+                .name(taskModel.getName())
+                .description(taskModel.getDescription())
+                .status(taskModel.getStatus().toString())
+                .createdAt(taskModel.getCreatedAt().toString())
+                .updatedAt(taskModel.getUpdatedAt().toString())
+                .projectId(taskModel.getProject().getId())
+                .build())
+            .toList())
         .build();
   }
 

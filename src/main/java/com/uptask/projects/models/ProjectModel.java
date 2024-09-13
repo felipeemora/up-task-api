@@ -1,8 +1,6 @@
 package com.uptask.projects.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.uptask.task.models.TaskModel;
 import java.util.List;
 import lombok.Builder;
@@ -24,7 +22,7 @@ public class ProjectModel {
 
   private String description;
 
-  @JsonBackReference
-  @DBRef
+  @DBRef(lazy = true)
+  @JsonIgnoreProperties("project")
   private List<TaskModel> tasks;
 }

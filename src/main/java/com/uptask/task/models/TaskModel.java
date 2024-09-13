@@ -1,8 +1,6 @@
 package com.uptask.task.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.uptask.projects.models.ProjectModel;
 import com.uptask.task.utils.TaskStatus;
 import java.time.Instant;
@@ -26,10 +24,11 @@ public class TaskModel {
 
   private String description;
 
-  @DBRef
-  @JsonManagedReference
+  @DBRef(lazy = true)
+  @JsonIgnoreProperties("tasks")
   private ProjectModel project;
 
+  @Builder.Default
   private TaskStatus status = TaskStatus.PENDING;
 
   @CreatedDate
