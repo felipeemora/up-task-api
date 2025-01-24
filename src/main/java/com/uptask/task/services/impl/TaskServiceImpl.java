@@ -1,10 +1,13 @@
 package com.uptask.task.services.impl;
 
+import com.uptask.exception.BusinessException;
+import com.uptask.exception.ResourceNotFoundException;
 import com.uptask.models.ValidationResultModel;
 import com.uptask.projects.models.ProjectModel;
 import com.uptask.projects.repositories.ProjectRepository;
 import com.uptask.task.dto.TaskRequestDto;
 import com.uptask.task.dto.TaskResponseDto;
+import com.uptask.task.mappers.TaskMapper;
 import com.uptask.task.models.TaskModel;
 import com.uptask.task.repositories.TaskRepository;
 import com.uptask.task.services.TaskService;
@@ -14,8 +17,8 @@ import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
   private TaskRepository taskRepository;
@@ -25,23 +28,24 @@ public class TaskServiceImpl implements TaskService {
   public TaskResponseDto create(String projectId, TaskRequestDto requestDto) {
     ProjectModel project = projectRepository.findById(projectId)
         .orElseThrow(() -> new RuntimeException("Project not found"));
-    TaskModel taskCreated = taskRepository.save(toModel(requestDto, project.getId()));
+
+    TaskModel taskCreated = taskRepository.save(TaskMapper.MAPPER.toModel(requestDto, project.getId()));
 
     project.getTasks().add(taskCreated);
     projectRepository.save(project);
-    return toResponseDto(taskCreated);
+    return TaskMapper.MAPPER.toResponseDto(taskCreated);
   }
 
   @Override
   public List<TaskResponseDto> getTasksByProjectId(String projectId) {
-    return taskRepository.findByProjectId(projectId).stream().map(this::toResponseDto).toList();
+    return taskRepository.findByProjectId(projectId).stream().map(TaskMapper.MAPPER::toResponseDto).toList();
   }
 
   @Override
   public TaskResponseDto getTasksById(String projectId, String taskId) {
     ValidationResultModel validationResult = validateData(projectId, taskId);
 
-    return toResponseDto(validationResult.getTask());
+    return TaskMapper.MAPPER.toResponseDto(validationResult.getTask());
   }
 
   @Override
@@ -68,36 +72,15 @@ public class TaskServiceImpl implements TaskService {
     taskRepository.save(validationResult.getTask());
   }
 
-  private TaskModel toModel(TaskRequestDto requestDto, String projectId) {
-    return TaskModel.builder()
-        .name(requestDto.getName())
-        .description(requestDto.getDescription())
-        .project(ProjectModel.builder().id(projectId).build())
-        .build();
-  }
-
-  private TaskResponseDto toResponseDto(TaskModel taskModel) {
-    String status = taskModel.getStatus() != null ? taskModel.getStatus().toString() : null;
-    return TaskResponseDto.builder()
-        .id(taskModel.getId())
-        .name(taskModel.getName())
-        .description(taskModel.getDescription())
-        .status(status)
-        .projectId(taskModel.getProject().getId())
-        .createdAt(taskModel.getCreatedAt().toString())
-        .updatedAt(taskModel.getUpdatedAt().toString())
-        .build();
-  }
-
   private ValidationResultModel validateData(String projectId, String taskId) {
     ProjectModel project = projectRepository.findById(projectId)
-        .orElseThrow(() -> new RuntimeException("Project not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("project", "id", projectId));
 
     TaskModel task = taskRepository.findById(taskId)
-        .orElseThrow(() -> new RuntimeException("Task not found"));
+        .orElseThrow(() -> new ResourceNotFoundException("task", "id", taskId));
 
     if (!Objects.equals(task.getProject().getId(), projectId)) {
-      throw new RuntimeException("Action not valid");
+      throw new BusinessException();
     }
 
     return ValidationResultModel.builder()

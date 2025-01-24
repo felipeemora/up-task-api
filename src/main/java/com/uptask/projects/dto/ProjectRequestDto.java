@@ -19,12 +19,4 @@ public class ProjectRequestDto {
 
   @NotBlank(message = "Description is required.")
   private String description;
-
-  public void setProjectName(String projectName) {
-    this.projectName = projectName.trim();
-  }
-
-  public void setClientName(String clientName) {
-    this.clientName = clientName.trim();
-  }
 }
