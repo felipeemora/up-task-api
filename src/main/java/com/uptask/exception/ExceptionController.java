@@ -1,7 +1,5 @@
-package com.uptask.task.controllers;
+package com.uptask.exception;
 
-import com.uptask.exception.ErrorDetails;
-import com.uptask.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,7 +24,7 @@ public class ExceptionController {
         formattedTimestamp,
         ex.getMessage(),
         webRequest.getDescription(false),
-        "TASK_NOT_FOUND"
+        "RESOURCE_NOT_FOUND"
     );
     return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
   }

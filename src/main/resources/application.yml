@@ -6,4 +6,4 @@ spring:
     name: up-task-api
   data:
     mongodb:
-      uri: ${MONGO_URL}
+      uri: mongodb://localhost:27017/up_task
