@@ -6,4 +6,4 @@ spring:
     name: up-task-api
   data:
     mongodb:
-      uri: mongodb://localhost:27017/up_task
+      uri: mongodb://fmorasoft:fmora1234@localhost:27017/up_task?authSource=admin

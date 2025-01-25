@@ -20,7 +20,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public ProjectResponseDto create(ProjectRequestDto projectRequestDto) {
     ProjectModel project = ProjectMapper.MAPPER.toModel(projectRequestDto);
-    return ProjectMapper.MAPPER.toResponseDto(project);
+    return ProjectMapper.MAPPER.toResponseDto(projectRepository.save(project));
   }
 
   @Override
